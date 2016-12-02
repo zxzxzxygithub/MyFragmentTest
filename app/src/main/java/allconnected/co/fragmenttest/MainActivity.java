@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +17,7 @@ import android.widget.Toast;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FragmentOne mFOne;
 
@@ -36,15 +37,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mFOne = new FragmentOne();
         FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction tx = fm.beginTransaction();
-        tx.add(R.id.content_main, mFOne, "ONE");
-        tx.commit();
-
+//       通过日志查看savedinstancestate里面保存的内容
+        Log.d("FragmentOne", "onCreate: "+savedInstanceState);
+        if (savedInstanceState==null){
+            mFOne = new FragmentOne();
+            FragmentTransaction tx = fm.beginTransaction();
+            tx.add(R.id.content_main, mFOne, "ONE");
+            tx.commit();
+        }
         List<Fragment> fragments = fm.getFragments();
-        if (fragments!=null&&fragments.size()>0){
-            Toast.makeText(this, "we have "+fragments.size()+" fragment(s) ", Toast.LENGTH_SHORT).show();
+//        如果想屏幕翻转的时候fragments列表为空则注释掉这行，不进行保存
+//        super.onSaveInstanceState(outState);
+//        或者在add fragment的时候判断savedInstanceState为空的时候再进行add操作
+        if (fragments != null && fragments.size() > 0) {
+            Toast.makeText(this, "we have " + fragments.size() + " fragmentOne(s) ", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -70,5 +77,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+//        注释掉这行，不进行保存
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        switch (id) {
+            case R.id.btn_one:
+                Toast.makeText(this, "this is from fragment", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
     }
 }

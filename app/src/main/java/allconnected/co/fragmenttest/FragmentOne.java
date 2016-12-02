@@ -1,7 +1,7 @@
 package allconnected.co.fragmenttest;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +17,7 @@ public class FragmentOne extends Fragment
 	{
 		Log.e(TAG, "onCreateView");
 		View view = inflater.inflate(R.layout.fragment_one, container, false);
+		view.findViewById(R.id.btn_one).setOnClickListener((View.OnClickListener) getActivity());
 		return view;
 	}
 
