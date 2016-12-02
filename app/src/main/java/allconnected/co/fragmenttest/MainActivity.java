@@ -39,12 +39,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         FragmentManager fm = getSupportFragmentManager();
 //       通过日志查看savedinstancestate里面保存的内容
-        Log.d("FragmentOne", "onCreate: "+savedInstanceState);
-        if (savedInstanceState==null){
+        Log.d("FragmentOne", "onCreate: " + savedInstanceState);
+//       每一个fragment的操作都启用一个事务，保证事务的原子性
+        if (savedInstanceState == null) {
             mFOne = new FragmentOne();
-            FragmentTransaction tx = fm.beginTransaction();
+            FragmentTransaction tx;
+            tx = fm.beginTransaction();
             tx.add(R.id.content_main, mFOne, "ONE");
             tx.commit();
+            fm.executePendingTransactions();
+            if (mFOne.isAdded()) {
+                tx = fm.beginTransaction();
+                tx.remove(mFOne);
+                tx.commit();
+                fm.executePendingTransactions();
+            }
+            tx = fm.beginTransaction();
+            tx.add(R.id.content_main, mFOne, "ONE");
+            tx.commit();
+            fm.executePendingTransactions();//确保fragment是立刻提交的
         }
         List<Fragment> fragments = fm.getFragments();
 //        如果想屏幕翻转的时候fragments列表为空则注释掉这行，不进行保存
