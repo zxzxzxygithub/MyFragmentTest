@@ -44,11 +44,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //       每一个fragment的操作都启用一个事务，保证事务的原子性
 //        if (savedInstanceState == null) {
         mFOne=new FragmentOne();
-        mFm.beginTransaction().add(R.id.content_main,mFOne,"mOne").commit();
-        mFm.executePendingTransactions();
 //        执行了executePendingTransactions，isAdded才会生效
-        if (!mFOne.isAdded()){
+        if (!mFOne.isFragmentAdded()){
             mFm.beginTransaction().add(R.id.content_main,mFOne,"mOne").commit();
+            mFOne.setIsAdded(true);
+        }
+        if (!mFOne.isFragmentAdded()){
+            mFm.beginTransaction().add(R.id.content_main,mFOne,"mOne").commit();
+            mFOne.setIsAdded(true);
         }
 //        tx = fm.beginTransaction();
 //        tx.add(R.id.content_main, mFOne, "ONE");
